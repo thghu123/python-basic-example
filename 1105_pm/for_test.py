@@ -7,6 +7,7 @@ while 조건식 :
 '''
 
 ar1 = [1,2,3,4,5,6,7,8,9]
+
 '''
 for i in ar1 :
     print("\n{}단".format(i))
