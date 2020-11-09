@@ -9,3 +9,7 @@ emp_list = [{'empno':100, 'name':'나루토', 'job':'DEV'},
 df = DataFrame(emp_list)
 #make(transform) dataFrame
 print(df) #key = column
+
+print("---")
+df = df[['empno','job','name']] #컬럼 순서 변경하기 
+print(df)
