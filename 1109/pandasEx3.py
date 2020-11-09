@@ -12,4 +12,10 @@ df = pd.read_csv('1109/test_data.tsv',sep = '\t')
 # 현 python folder 기준으로 경로 입력
 # 열의 구분자는 tab
 
-print(df)
+print(df) 
+
+print('-----------------------------------------------')
+print(df.tail(2)) #행 2개만
+print('-----------------------------------------------')
+print(df.col2) #열 하나만
+
