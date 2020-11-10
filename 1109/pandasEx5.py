@@ -57,9 +57,11 @@ print(df.drop(columns='empno'))
 
 #print(df[df.empno >= 200])#empno가 200이상인 행들만 출력
 #print(df.query('empno>=100'))
-#print(df[df.empno>= 100]) #오류 나온다
+
 
 #print(df[int(df['empno']>= 100)])
 
 #TypeError: '>=' not supported between instances of 'str' and 'int'
 #에러메세지
+
+#print(df[df.empno>= 100]) #오류 나온다
