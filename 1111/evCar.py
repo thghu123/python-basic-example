@@ -1,5 +1,51 @@
-#원래 __init__은 그자체이기에 evCar만 해도된다
+from flask import Flask
+from flask_cors import CORS
+from urllib.request import urlopen
 
+import xml.etree.ElementTree as ET
+import pandas as pd
+from pandas.core.frame import DataFrame
+
+app = Flask(__name__)
+
+CORS(app)
+
+spec = "http://open.ev.or.kr:8080/openapi/services/EvCharger/getChargerInfo?ServiceKey=FDp2a3vCnN%2BVvgfwp%2BneIQPvN3zTM7aLpEznSGbkyDN47qXAmtPene0L3A8mgUsbO%2F7pzLR3EX7rdD0%2B6wZe3Q%3D%3D"
+
+@app.route("/evCar", methods=["POST"])
+def ev_car():
+    res = urlopen(spec).read()
+    xmlDoc = ET.fromstring(res) # 문자열로 된 xml을 xml객체로 변환
+    
+    items = xmlDoc.find('body').find('items')
+    
+    # 우리가 원하는 자원은 items안에 있는 item들이다 
+    # 이 item들 안에 있는 주소가 필요하다 그래서 우리가 필요한
+    # item들을 의미부여된 JSON형태로 한곳에 모아두자!
+    rows = []
+    for i in items:
+        statNm = i.find('statNm').text
+        chgerType = i.find('chgerType').text
+        addr = i.find('addr').text
+        
+        rows.append({'s_name':statNm, 'type':chgerType, 'addr':addr})
+        
+    df = DataFrame(rows)
+    
+    df2 = DataFrame({'city':df['addr'].str.split(' ', expand=True)[0]})
+    
+    df3 = df2.city.value_counts().rename_axis('city').reset_index(name='counts')
+    
+    
+    return df3.to_json(orient='records')
+
+
+
+
+
+
+#원래 __init__은 그자체이기에 evCar만 해도된다
+"""
 from flask import Flask
 
 #cross domain errer 방지
@@ -45,11 +91,15 @@ def ev_car():
     df2 = DataFrame({"city":df['addr'].str.split(" ",expand=True)[0]}) #문자열로 만들고 자름 + 덧붙여라 
     #주소만 모아서 dataFrame 만들어진다, 시군만 필요하다 (서울 특별시. 경기도 등등 나온다.)
     #서울 특별시의 전기 충전소가 몇개있는가? 쓸 데 없는 데이터 잘라낸다.
-
-
-
-
     
+    df3 = df2.city.value_counts().rename_axis('city').reset_index(name = 'counts') 
+    #앞이 잘린 시군이 city에 있다 index는 지정한다.
+    return df3.to_json(orient = "records")
+
+
+
+
+    """
 
 
 
