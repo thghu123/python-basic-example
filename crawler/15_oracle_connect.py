@@ -1,6 +1,6 @@
 import cx_Oracle
 
-conn = cx_Oracle.connect("class11/class11@localhost:1521:orcl")
+conn = cx_Oracle.connect("OracleAddress")
 cursor = conn.cursor()
 sql = "select * from bbs"
 
